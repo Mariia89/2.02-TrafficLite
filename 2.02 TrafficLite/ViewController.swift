@@ -8,66 +8,61 @@
 import UIKit
 
 enum TrafficLightState {
-    case red
-    case yellow
-    case green
-    case none
-}
-
-class ViewController: UIViewController {
-    @IBOutlet var startButton: UIButton!
-    @IBOutlet var redCircle: UIView!
-    @IBOutlet var greenCircle: UIView!
-    @IBOutlet var yellowCircle: UIView!
-    
-    var state: TrafficLightState = .none
+    case red, yellow, green
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        redCircle.layer.cornerRadius = 63
-        yellowCircle.layer.cornerRadius = 63
-        greenCircle.layer.cornerRadius = 63
-        startButton.layer.cornerRadius = 10
-    }
-
-    @IBAction func buttonTapped(_: Any) {
-        var buttonConfiguration = UIButton.Configuration.filled()
-        buttonConfiguration.title = "Next"
-        buttonConfiguration.baseBackgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-        buttonConfiguration.buttonSize = .large
-        buttonConfiguration.cornerStyle = .large
-        buttonConfiguration.attributedTitle?.font = UIFont.systemFont(ofSize: 24)
-
-        redCircle.alpha = 1
-        greenCircle.alpha = 0.1
-        yellowCircle.alpha = 0.1
+    class ViewController: UIViewController {
         
-        switch state {
-        case .red:
-            state = .green
-            redCircle.alpha = 0.1
-            greenCircle.alpha = 1
-            yellowCircle.alpha = 0.1
-        case .yellow:
-            state = .red
-            redCircle.alpha = 1
-            greenCircle.alpha = 0.1
-            yellowCircle.alpha = 0.1
-        case .green:
-            state = .yellow
-            redCircle.alpha = 0.1
-            greenCircle.alpha = 0.1
-            yellowCircle.alpha = 1
-        case .none:
-            state = .red
-            redCircle.alpha = 1
-            greenCircle.alpha = 0.1
-            yellowCircle.alpha = 0.1
+        
+        @IBOutlet var redCircle: UIView!
+        @IBOutlet var greenCircle: UIView!
+        @IBOutlet var yellowCircle: UIView!
+        
+        @IBOutlet var startButton: UIButton!
+        
+        private var trafficLiteState = TrafficLightState.red
+        
+        
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            startButton.layer.cornerRadius = 10
         }
         
-        startButton.configuration = buttonConfiguration
+        override func viewWillLayoutSubviews() {
+            redCircle.layer.cornerRadius = redCircle.frame.width / 2
+            yellowCircle.layer.cornerRadius = redCircle.frame.width / 2
+            greenCircle.layer.cornerRadius = redCircle.frame.width / 2
+        }
+            @IBAction func buttonTapped() {
+                if startButton.currentTitle == "START" {
+                    startButton.setTitle("NEXT", for: .normal)
+                }
+                
+                
+                
+                switch trafficLiteState {
+                case .red:
+                    redCircle.alpha = 0.1
+                    greenCircle.alpha = 1
+                    yellowCircle.alpha = 0.1
+                    trafficLiteState = .yellow
+                case .yellow:
+                    redCircle.alpha = 1
+                    greenCircle.alpha = 0.1
+                    yellowCircle.alpha = 0.1
+                    trafficLiteState = .green
+                case .green:
+                    redCircle.alpha = 0.1
+                    greenCircle.alpha = 0.1
+                    yellowCircle.alpha = 1
+                    trafficLiteState = .red
+                }
+                
+                
+                
+            }
+            
+        }
     }
-        
-}
+
